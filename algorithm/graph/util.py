@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from algorithm.graph import Graph, Edge
+from .graph import Graph, Edge
 
 
 def load_graph_from_file(file) -> Graph:
@@ -32,3 +32,31 @@ def load_graph_from_file(file) -> Graph:
         for edge in edges[u]:
             graph.add_edge(edge.u, edge.v, edge.weight)
     return graph
+
+
+def tree_as_str(graph, predecessor, vertex_info_function=None):
+    d = {"tree": ""}
+    for u in graph.vertices:
+        if predecessor[u] == u:
+            _tree_as_str_rec(graph, predecessor, vertex_info_function, u, d, "", None)
+    return d["tree"]
+
+
+def _tree_as_str_rec(graph, predecessor, vertex_info_function, u, d, before, last_child):
+    if last_child is None:
+        line = f"{u}"
+        before = f""
+    elif last_child:
+        line = f"{before}└─>{u}"
+        before = f"{before}   "
+    else:
+        line = f"{before}├─>{u}"
+        before = f"{before}|  "
+    if vertex_info_function is not None:
+        line = f"{line} ({vertex_info_function(u)})"
+    d["tree"] += f"{line}\n"
+    children = [
+        e.v for e in graph.neighbors(u) if predecessor[e.v] == u
+    ]
+    for i, v in enumerate(children):
+        _tree_as_str_rec(graph, predecessor, vertex_info_function, v, d, before, i == len(children) - 1)

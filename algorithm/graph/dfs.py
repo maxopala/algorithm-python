@@ -1,3 +1,4 @@
+from .util import tree_as_str
 from .graph import Graph
 
 
@@ -8,31 +9,8 @@ class DfsResult:
         self.finish_instant = kv["finish_instant"]
         self.predecessor = kv["predecessor"]
 
-    def tree_as_str(self, show_instants=False):
-        d = {"tree": ""}
-        for u in self.graph.vertices:
-            if self.predecessor[u] == u:
-                self._tree_as_str_rec(u, d, "", None, show_instants)
-        return d["tree"]
-
-    def _tree_as_str_rec(self, u, d, before, last_child, show_instants):
-        if last_child is None:
-            line = f"{u}"
-            before = f""
-        elif last_child:
-            line = f"{before}└─>{u}"
-            before = f"{before}   "
-        else:
-            line = f"{before}├─>{u}"
-            before = f"{before}|  "
-        if show_instants:
-            line = f"{line} ({self.start_instant[u]}/{self.finish_instant[u]})"
-        d["tree"] += f"{line}\n"
-        children = [
-            e.v for e in self.graph.neighbors(u) if self.predecessor[e.v] == u
-        ]
-        for i, v in enumerate(children):
-            self._tree_as_str_rec(v, d, before, i == len(children) - 1, show_instants)
+    def tree_as_str(self):
+        return tree_as_str(self.graph, self.predecessor, lambda u: f"{self.start_instant[u]}/{self.finish_instant[u]}")
 
 
 def _next_vertex(graph: Graph, visited, start_order):

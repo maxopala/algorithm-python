@@ -13,6 +13,7 @@ class BfsTest(unittest.TestCase):
     def test_bfs_algorithm(self):
         g = load_graph_from_file(f"{_data_path}/graph_001.txt")
         resp = bfs_algorithm(g, "A")
+        print(resp.tree_as_str())
         for u in resp.visited:
             v = resp.visited[u]
             d = resp.distance[u]
@@ -22,7 +23,7 @@ class BfsTest(unittest.TestCase):
     def test_dfs_algorithm(self):
         g = load_graph_from_file(f"{_data_path}/graph_003.txt")
         resp = dfs_algorithm(g)
-        print(resp.tree_as_str(show_instants=True))
+        print(resp.tree_as_str())
         for u in g.vertices:
             s = resp.start_instant[u]
             f = resp.finish_instant[u]

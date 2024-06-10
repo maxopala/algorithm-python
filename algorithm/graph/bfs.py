@@ -1,5 +1,6 @@
 from math import inf
 
+from .util import tree_as_str
 from .graph import Graph
 
 
@@ -10,6 +11,9 @@ class BfsResult:
         self.visited = kv["visited"]
         self.distance = kv["distance"]
         self.predecessor = kv["predecessor"]
+
+    def tree_as_str(self):
+        return tree_as_str(self.graph, self.predecessor)
 
 
 def bfs_algorithm(graph: Graph, start: str):
