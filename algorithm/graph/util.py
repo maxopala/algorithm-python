@@ -27,7 +27,9 @@ def load_graph_from_file(file) -> Graph:
                 elif line.find("->") >= 0:
                     parts = line.split("->")
                     edges[parts[0].strip()].append(Edge(parts[0].strip(), parts[1].strip(), 1.0))
-    graph = Graph(vertices_ids=list(edges.keys()))
+    graph = Graph(vertices_ids=list(set(list(edges.keys()) + list([
+        e.v for edges in edges.values() for e in edges
+    ]))))
     for u in edges:
         for edge in edges[u]:
             graph.add_edge(edge.u, edge.v, edge.weight)
